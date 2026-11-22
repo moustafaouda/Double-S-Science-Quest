@@ -96,7 +96,7 @@ svg{display:block}
 .pts{font-size:58px;font-weight:800;line-height:1}
 .arena{position:relative;overflow:hidden;border-radius:32px;background:linear-gradient(160deg,#2b1f6b,#6a2bb5 50%,#e0457b);color:#fff;padding:20px;box-shadow:0 10px 0 #0003}
 .gbar{height:18px;background:#ffffff33;border-radius:10px;overflow:hidden;margin:12px 0}.gbar div{height:100%;background:linear-gradient(90deg,#ffd76a,#ff9f1c);transition:width .6s}
-.stages{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:8px}
+.stages{display:grid;grid-template-columns:repeat(var(--ng,5),minmax(0,1fr));gap:12px;margin-top:8px}
 .stage{position:relative;font-family:inherit;color:var(--ink);background:#fff;border:5px solid var(--c);border-radius:24px;padding:12px 6px 10px;cursor:pointer;box-shadow:0 7px 0 #0004;text-align:center}
 .stage:nth-child(even){transform:translateY(18px)}
 .stage.sel{outline:5px solid #ffd76a;outline-offset:3px}
@@ -121,3 +121,4 @@ svg{display:block}
 @media (max-width:640px){h1{font-size:34px}h2{font-size:27px}.btn.big{font-size:22px}}.bg-light{background:linear-gradient(135deg,#e85d04,#f48c06 50%,#faa307)}
 .bg-plants{background:linear-gradient(135deg,#2d8a4e,#4cb963 50%,#8fd16a)}
 .bg-insects{background:linear-gradient(135deg,#7b3fbf,#c2569c 50%,#f08a5d)}
+.pulse{animation:pulse .7s infinite;box-shadow:0 0 0 4px #ffd23f}@keyframes pulse{50%{transform:scale(1.12)}}
