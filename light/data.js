@@ -22,7 +22,7 @@ const LIGHT_GAMES=[
  {id:'wd',em:'🔤',name:'Light Word Builder',ar:'رَتِّبْ حُرُوفَ الْكَلِمَاتِ',kind:'Unscramble Letters',how:'Read the Arabic meaning, then put the letters in order to spell the English word!',howAr:'اقْرَأِ الْمَعْنَى بِالْعَرَبِيَّةِ، ثُمَّ رَتِّبِ الْحُرُوفَ لِتَكْتُبَ الْكَلِمَةَ الْإِنْجِلِيزِيَّةَ!',col:'#00a6a6',url:''}];
 
 W4.bg='light';W4.games=LIGHT_GAMES;W4.rounds=LIGHT_ROUNDS;
-W4.boss={name:'Shadow Monster',ar:'وَحْشُ الظِّلَالِ',acc:'وَحْشَ الظِّلَالِ',em:'🌑',col:'#3b2f6e',snd:'zap',qs:['q1','q2','q3','q4','q5']};
+W4.boss={name:'Shadow Monster',ar:'وَحْشُ الظِّلَالِ',acc:'وَحْشَ الظِّلَالِ',em:'🌑',col:'#3b2f6e',eye:'#fde047',snd:'zap',qs:['q1','q2','q3','q4','q5']};
 W4.grand={champ:'Light Champion',champAr:'بَطَلُ الضَّوْءِ',title:'The Grand Light Challenge',titleAr:'التَّحَدِّي الْكَبِيرُ لِلضَّوْءِ'};
 W4.breaks=[
  ['b-stretch','Shadow break! Make a tall shadow, then a tiny shadow with your body!','اسْتِرَاحَةُ الظِّلِّ! اصْنَعْ بِجِسْمِكَ ظِلًّا طَوِيلًا، ثُمَّ ظِلًّا صَغِيرًا!','👤'],
