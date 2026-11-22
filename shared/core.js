@@ -244,7 +244,7 @@ function startAct(id){actTok++;const t=ACT[id][1];ACTS[t](id)}
 
 /* ---------- learn ---------- */
 function learn(id){const cards=LEARN[id];let i=0;const draw=()=>{const c=cards[i];$('act').innerHTML=head(id)+`<div class="card pop"><div style="max-width:640px;margin:0 auto">${art(c.art)}</div><p style="font-size:28px;font-weight:600;margin:12px 0 4px">${c.en}</p>${AR(c.ar)}<div class="row" style="margin-top:14px"><button class="btn sm w" id="sen">🔊 English</button><button class="btn sm w" id="sar">🔊 عربي</button></div><div class="row" style="margin-top:16px;justify-content:space-between"><button class="btn w" ${i?'':'style="visibility:hidden"'} id="pv">⬅ Back</button><span style="font-weight:800;font-size:22px">${'🟣'.repeat(i+1)}${'⚪'.repeat(cards.length-i-1)}</span><button class="btn g big" id="nx">${i<cards.length-1?'Next ➜':'Done ✓'}</button></div></div>`;
- speak(c.en);$('sen').onclick=()=>speak(c.en);$('sar').onclick=()=>sayAr(c.ar);$('pv').onclick=()=>{SFX.click();i--;draw()};$('nx').onclick=()=>{SFX.click();if(++i<cards.length)draw();else finish(id,3,'You learned it! Now let\'s play. 🎮','لَقَدْ تَعَلَّمْتَ! هَيَّا نَلْعَبْ الْآنَ.')}};draw()}
+ speak(c.en);$('sen').onclick=()=>speak(c.en);$('sar').onclick=()=>sayAr(c.ar);$('pv').onclick=()=>{if(i<=0)return;SFX.click();i--;draw()};$('nx').onclick=()=>{SFX.click();if(++i<cards.length)draw();else finish(id,3,'You learned it! Now let\'s play. 🎮','لَقَدْ تَعَلَّمْتَ! هَيَّا نَلْعَبْ الْآنَ.')}};draw()}
 
 /* ---------- quiz engine ---------- */
 function runQuiz(id,qs,opt){let i=0,score=0,retry=[],firstPass=true,lives=opt.lives,hp=qs.length;

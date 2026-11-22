@@ -2,7 +2,7 @@
 const WORLDS=[
  {id:5,url:'sound/',em:'🔊',ch:'Chapter 5',title:'Properties of Sound',ar:'خَصَائِصُ الصَّوْتِ',color:'#8c5cff',ready:true},
  {id:4,url:'light/',em:'☀️',ch:'Chapter 4',title:'Properties of Light',ar:'خَصَائِصُ الضَّوْءِ',color:'#ff9f1c',ready:true},
- {id:3,url:'plants/',em:'🌱',ch:'Chapter 3',title:'How Plants Grow',ar:'كَيْفَ يَنْمُو النَّبَاتُ',color:'#22b46e',ready:false},
+ {id:3,url:'plants/',em:'🌱',ch:'Chapter 3',title:'How Plants Grow',ar:'كَيْفَ يَنْمُو النَّبَاتُ',color:'#22b46e',ready:true},
  {id:2,url:'insects/',em:'🦋',ch:'Chapter 2',title:'How Insects Grow',ar:'كَيْفَ تَنْمُو الْحَشَرَاتُ',color:'#1aa3a3',ready:false}];
 function worldBadges(id){const p=wprog(id),g=((P().grand||{})[id])||{};const won=Object.keys(g).length;return `${p.boss?'🏆':''}${won>=5?'👑':''}`}
 function mapScreen(){const last=WORLDS.find(w=>w.id===S.lastWorld&&w.ready);
