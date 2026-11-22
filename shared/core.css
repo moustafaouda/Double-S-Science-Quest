@@ -118,4 +118,6 @@ svg{display:block}
 .avt.on{border-color:#22b46e;background:#e9fbf1;box-shadow:0 4px 0 #9fe1cb}
 .tick{position:absolute;top:-8px;right:-8px;background:#22b46e;color:#fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:18px}
 @media (max-width:760px){.avb{grid-template-columns:1fr}}
-@media (max-width:640px){h1{font-size:34px}h2{font-size:27px}.btn.big{font-size:22px}}
+@media (max-width:640px){h1{font-size:34px}h2{font-size:27px}.btn.big{font-size:22px}}.bg-light{background:linear-gradient(135deg,#e85d04,#f48c06 50%,#faa307)}
+.bg-plants{background:linear-gradient(135deg,#2d8a4e,#4cb963 50%,#8fd16a)}
+.bg-insects{background:linear-gradient(135deg,#7b3fbf,#c2569c 50%,#f08a5d)}
