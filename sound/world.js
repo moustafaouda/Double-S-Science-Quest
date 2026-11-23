@@ -162,7 +162,7 @@ function impact(p){const k=L.inst,vol=.05+Math.pow(p,1.6)*.95;play(k,vol);
  else{L.first=false;const tip=M.l?(k==='band'?'Hold longer to pull the band further!':'Hold the button longer to raise the stick higher!'):(k==='band'?'Let go quickly, so the band is only pulled a little!':'Let go quickly, so the stick stays low!');$('lmsg').innerHTML=`${msg}<br>🤔 ${tip} ${AR(M.l?'اضْغَطْ مُدَّةً أَطْوَلَ لِتَكُونَ الضَّرْبَةُ أَقْوَى!':'اتْرُكِ الزِّرَّ بِسُرْعَةٍ لِتَكُونَ الضَّرْبَةُ خَفِيفَةً!')}`;later(()=>speak(tip),900)}}
 function nextLabMission(){const n=calm()?6:8;if(L.no>=n){finish('lab',ratio(L.score/n),`You finished ${n} missions!`,`أَنْهَيْتَ ${n} مُهِمَّاتٍ!`);return}L.no++;L.first=true;const ks=Object.keys(INST);let m;
  if(L.no<=2)m={i:'band',l:L.no===1};else do{m={i:ks[Math.random()*3|0],l:Math.random()<.5}}while(L.prev&&m.i===L.prev.i&&m.l===L.prev.l);L.prev=m;L.mission=m;const v=INST[m.i];
- $('mis').innerHTML=sayMe(`Mission ${L.no} of ${n}: ${NM()}, ${v[3]} the <b>${v[0]} ${v[1]}</b> <b style="color:${m.l?'#ef5b5b':'#22b46e'}">${m.l?'STRONGLY':'gently'}</b>! ${AR(`${v[4]} ${v[2]} ${m.l?'بِقُوَّةٍ':'بِرِفْقٍ'}!`)}`);$('lmsg').innerHTML='';speak(`${PN()}, ${v[3]} the ${v[1]} ${m.l?'strongly':'gently'}!`)}
+ $('mis').innerHTML=sayMe(`Mission ${L.no} of ${n}: ${NM()}, ${v[3]} the <b>${v[0]} ${v[1]}</b> <b style="color:${m.l?'#ef5b5b':'#22b46e'}">${m.l?'STRONGLY':'gently'}</b>! ${AR(`${v[4]} ${v[2]} ${m.l?'بِقُوَّةٍ':'بِرِفْقٍ'}!`)}`);$('lmsg').innerHTML='';speak(`${v[3].charAt(0).toUpperCase()+v[3].slice(1)} the ${v[1]} ${m.l?'strongly':'gently'}!`)}
 
 /* ---------- Lesson 1 lab: ruler and oud ---------- */
 let RL={};
