@@ -15,7 +15,7 @@ const PLANT_ROUNDS=[
 
 const PLANT_GAMES=[
  {id:'fj',em:'🐸',name:'Froggy Plant Jumps',ar:'قَفَزَاتُ الضِّفْدَعِ النَّبَاتِيَّةُ',kind:'Froggy Jumps',how:'Help the frog jump onto the lily pad with the right answer!',howAr:'سَاعِدِ الضِّفْدَعَ لِيَقْفِزَ إِلَى الْإِجَابَةِ الصَّحِيحَةِ!',col:'#22b46e',url:'https://www.educaplay.com/learning-resources/31634468-plants_quest_1_froggy_plant_jumps.html'},
- {id:'lu',em:'🪜',name:'Plant Line Up',ar:'رَتِّبْ مَرَاحِلَ النَّبَاتِ',kind:'Line Up',how:'Put the stages of plant life in the right order!',howAr:'رَتِّبْ مَرَاحِلَ حَيَاةِ النَّبَاتِ بِالتَّرْتِيبِ الصَّحِيحِ!',col:'#4a8cff',url:''},
+ {id:'lu',em:'🪜',name:'Plant Line Up',ar:'رَتِّبْ مَرَاحِلَ النَّبَاتِ',kind:'Line Up',how:'Put the stages of plant life in the right order!',howAr:'رَتِّبْ مَرَاحِلَ حَيَاةِ النَّبَاتِ بِالتَّرْتِيبِ الصَّحِيحِ!',col:'#4a8cff',url:'https://www.educaplay.com/learning-resources/31634998-plants_quest_2_plant_line_up.html'},
  {id:'mm',em:'🧠',name:'English–Arabic Memory',ar:'ذَاكِرَةُ الْكَلِمَاتِ',kind:'Memory',how:'Turn the cards and match each English word with its Arabic meaning!',howAr:'اقْلِبِ الْبِطَاقَاتِ، وَطَابِقْ كُلَّ كَلِمَةٍ بِمَعْنَاهَا!',col:'#8c5cff',url:''},
  {id:'yn',em:'👍',name:'True or False Plant Facts',ar:'صَحٌّ أَمْ خَطَأٌ؟',kind:'Yes or No',how:'Swipe each plant fact: true or false?',howAr:'اسْحَبْ كُلَّ جُمْلَةٍ: صَحٌّ أَمْ خَطَأٌ؟',col:'#ff7a45',url:''},
  {id:'ms',em:'🗂️',name:'Plant Sorter',ar:'صَنِّفْ أَجْزَاءَ النَّبَاتِ',kind:'Matching',how:'Sort every item into the right group!',howAr:'ضَعْ كُلَّ شَيْءٍ فِي مَجْمُوعَتِهِ الصَّحِيحَةِ!',col:'#e0457b',url:''},
