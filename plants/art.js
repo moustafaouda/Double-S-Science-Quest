@@ -36,7 +36,7 @@ function sunflowerG(x,gy,g,o={}){const H=sfH(g);let s='';const dry=o.dry!=null?o
  if(g<.12){const rk=Math.max(0,(g-.05)/.07);return s+(rk>0?`<path d="M${x+4} ${gy+40} q${-6*rk} ${22*rk} ${2} ${46*rk}" stroke="#f5f0e1" stroke-width="4" fill="none" stroke-linecap="round"/>${rk>.5?`<path d="M${x+2} ${gy+60} l-10 8 M${x+3} ${gy+70} l9 7" stroke="#f5f0e1" stroke-width="2" opacity="${(rk-.5)*2}"/>`:''}`:'')+seedSun(x,gy+26,1,30)+(rk>.6?`<path d="M${x} ${gy+12} q4 ${-10*(rk-.6)/.4} 0 ${-16*(rk-.6)/.4}" stroke="url(#gStem)" stroke-width="5" fill="none" stroke-linecap="round"/>`:'')}
  if(g<.2){const k=(g-.12)/.08;return s+`<path d="M${x} ${gy+20} Q${x+14} ${gy-H*.6} ${x+4} ${gy-H}" stroke="url(#gStem)" stroke-width="6" fill="none" stroke-linecap="round"/>${seedSun(x+6,gy-H-6,.7,70)}`}
  const top=gy-H;s+=`<path d="M${x} ${gy} Q${x-4} ${gy-H*.5} ${x} ${top}" stroke="url(#gStem)" stroke-width="${Math.min(16,5+H*.04)}" fill="none" stroke-linecap="round"/>`;
- const sl=g<.5;if(sl||o.keepSeed)s+=`<g class="seedleaf">${leafSeed(x,gy-Math.min(H,40)*.75,26,-160)}${leafSeed(x,gy-Math.min(H,40)*.75,26,-20)}</g>`;
+ const sl=g<.4;if(sl||o.keepSeed)s+=`<g class="seedleaf">${leafSeed(x,gy-Math.min(H,40)*.75,26,-160)}${leafSeed(x,gy-Math.min(H,40)*.75,26,-20)}</g>`;
  const nl=g<.36?0:Math.min(7,2+Math.floor((g-.36)/.04));for(let i=0;i<nl;i++){const yy=gy-H*(.2+i*(.62/7)),len=Math.min(78,34+(nl-i)*6+(g-.36)*40),side=i%2;s+=`<g class="trueleaf" ${DS}>${leafTrue(x+(side?-3:3),yy,len,(side?-168:-12)+(side?-1:1)*dry*40)}</g>`}
  if(g>=.6)s+=sunHead(x,top,g<.68?22:46,g<.68?'bud':g<.82?'bloom':g<.9?'wither':'fruit');
  return s}

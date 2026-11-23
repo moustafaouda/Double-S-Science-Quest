@@ -124,7 +124,7 @@ svg{display:block}
 .pulse{animation:pulse .7s infinite;box-shadow:0 0 0 4px #ffd23f}@keyframes pulse{50%{transform:scale(1.12)}}
 
 /* talking lock */
-body.talking #act button:not(.w):not(.snd):not([data-free]),body.talking #act .opt,body.talking #act .tile{filter:grayscale(.85);opacity:.5;cursor:not-allowed;transition:opacity .2s,filter .2s}
+body.talking #act button:not(.sm.w):not(#pv):not(.snd):not([data-free]),body.talking #act .opt,body.talking #act .tile{filter:grayscale(.85);opacity:.5;cursor:not-allowed;transition:opacity .2s,filter .2s}
 body.talking #act svg{cursor:wait}
 #listen{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) scale(.6);opacity:0;background:#7c3aed;color:#fff;font-weight:800;font-size:22px;padding:10px 22px;border-radius:30px;box-shadow:0 8px 24px #0004;z-index:9999;pointer-events:none}
 #listen.show{animation:lsn 1.6s ease forwards}

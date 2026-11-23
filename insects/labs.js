@@ -1,7 +1,7 @@
 /* ---------- Chapter 2 activities (hand-driven) ---------- */
 const wait=ms=>new Promise(r=>later(r,ms));
 function askBtns(box,q,qar,opts,cb){let first=true;$(box).innerHTML=`<div class="card pop" style="box-shadow:none;border:3px solid #fcd34d;background:#fffbeb"><b style="font-size:24px">${q}</b>${AR(qar)}<div class="row" style="justify-content:flex-start;margin-top:8px"><button class="btn sm w" id="${box}en">🔊 English</button><button class="btn sm w" id="${box}ar">🔊 عربي</button></div><div>${shuffle(opts.map((o,k)=>({o,k}))).map(x=>`<button class="btn opt" data-k="${x.k}">${x.o[0]}${x.o[1]?`<span class="ar" style="font-size:18px">${x.o[1]}</span>`:''}</button>`).join('')}</div></div>`;
- speak(q.replace(/<[^>]+>/g,''));$(box+'en').onclick=()=>speak(q.replace(/<[^>]+>/g,''));$(box+'ar').onclick=()=>sayAr(qar);
+ speakNext(q.replace(/<[^>]+>/g,''));$(box+'en').onclick=()=>speak(q.replace(/<[^>]+>/g,''));$(box+'ar').onclick=()=>sayAr(qar);
  document.querySelectorAll(`#${box} .opt`).forEach(b=>b.onclick=()=>{const k=+b.dataset.k;if(k===0){b.classList.add('right');SFX.good();document.querySelectorAll(`#${box} .opt`).forEach(x=>x.disabled=true);cb(first)}else{first=false;b.classList.add('wrong','shake');b.disabled=true;SFX.bad();speak('Hmm, not that one. Try again!')}})}
 function factLine(box,en,ar){$(box).innerHTML=`<div class="say pop" style="margin-top:8px">${me('cheer')}<div class="bubble">✅ ${en}${AR(ar)}</div></div>`}
 function misBox(id,i,n,t,ar){$(id).innerHTML=`<b>Mission ${i+1} of ${n}:</b> ${t} ${AR(ar)}`;sayMission(i,t)}
@@ -172,7 +172,7 @@ function bshow(id){const W=760,H=470,GY=420,A=[70,250],TX=700,BY=74,PX=560,PY=17
   return `<svg viewBox="0 0 ${W} ${H}" style="display:block;border-radius:14px">${DEFS}${IDEFS}${a}${dnShade(W,H,s.ph)}</svg>`};
  $('act').innerHTML=head(id)+`<div class="card" style="padding:16px"><div id="bsv">${scene()}</div><div id="bcap" style="margin-top:10px">${sayBuzzy(`<span id="pt">Press the yellow button, ${NM()}, to start the show! ${AR('اضْغَطِ الزِّرَّ الْأَصْفَرَ لِيَبْدَأَ الْعَرْضُ!')}</span>`)}</div><div class="row" id="pbtns" style="flex-wrap:wrap">${BSF.map((f,i)=>`<button class="btn sm ${i===0?'y':'w'}" data-i="${i}" ${i?'disabled':''} style="${i?'':''}">${i+1}. ${f[0]} ${f[1]}</button>`).join('')}</div><div id="fb" style="font-size:23px;margin-top:12px;min-height:90px"></div></div>`;
  document.querySelectorAll('#pbtns .btn').forEach(b=>b.classList.remove('w'));document.querySelectorAll('#pbtns .btn').forEach((b,j)=>b.classList.add(j===0?'y':'g'));document.querySelectorAll('#pbtns .btn').forEach((b,j)=>{if(j)b.style.opacity='.45'});
- speak(`Welcome to the butterfly garden, ${PN()}! Watch a butterfly's whole life, step by step. Press the yellow button to start.`);
+ speak(`Welcome to the butterfly garden! Watch a butterfly's whole life, step by step. Press the yellow button to start.`);
  const paint=()=>{$('bsv').innerHTML=scene()};let lastP=0;const paintT=()=>{const n=performance.now();if(n-lastP>45){lastP=n;paint()}};
  const tw=(ms,f)=>new Promise(r=>{const s0=performance.now(),tk=actTok;const fr=n=>{if(tk!==actTok)return;const k=Math.min(1,(n-s0)/ms);f(k);paintT();if(k<1)requestAnimationFrame(fr);else{paint();r()}};requestAnimationFrame(fr)});
  const wait=ms=>tw(ms,()=>{});const lerp=(a,b,k)=>a+(b-a)*k;const ease=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
