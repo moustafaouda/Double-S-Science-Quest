@@ -265,7 +265,7 @@ function worldScreen(){const nxt=ORDER.find(a=>unlocked(a[0])&&!prog(a[0]));cons
 /* ---------- results ---------- */
 
 /* ---------- parent log: each finished activity is sent to the parent's Google Sheet (queued while offline) ---------- */
-const SYNC_URL='';const SYNC_KEY='sq-66b5e786fffb';let actStart=0,actMissed=[];
+const SYNC_URL='https://script.google.com/macros/s/AKfycbzKQRUIOLfSS_WkOeClwo1mjmxThc_t5adPUHGoZQBobhj8DxtSByGynm5fGEB6rEKRJg/exec';const SYNC_KEY='sq-66b5e786fffb';let actStart=0,actMissed=[];
 const SQ_Q='sqSyncQ';const syncQ=()=>{try{return JSON.parse(localStorage.getItem(SQ_Q)||'[]')}catch(e){return []}},syncSet=q=>{try{localStorage.setItem(SQ_Q,JSON.stringify(q.slice(-500)))}catch(e){}};
 function logEv(type,o={}){try{const p=P();if(!p)return;const q=syncQ();q.push({t:Date.now(),child:p.name,world:(typeof WORLD!=='undefined'&&WORLD.title)||PAGE,act:o.act||'',type,stars:o.stars==null?'':o.stars,detail:o.detail||'',min:actStart?Math.max(0,Math.round((performance.now()-actStart)/6000)/10):''});syncSet(q);flushSync()}catch(e){}}
 let syncBusy=false;function flushSync(){if(!SYNC_URL||syncBusy||!navigator.onLine)return;const q=syncQ();if(!q.length)return;const part=q.slice(0,40);syncBusy=true;fetch(SYNC_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({key:SYNC_KEY,rows:part})}).then(()=>{const now=syncQ();syncSet(now.slice(part.length))}).catch(()=>{}).finally(()=>{syncBusy=false;if(syncQ().length&&navigator.onLine)setTimeout(flushSync,3000)})}
