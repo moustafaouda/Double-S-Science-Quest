@@ -54,26 +54,51 @@ function voicesFor(L){try{return speechSynthesis.getVoices().filter(v=>v.lang&&v
 function vScore(v){return(/natural|neural/i.test(v.name)?20:0)+(/online/i.test(v.name)?8:0)+(/google/i.test(v.name)?6:0)+(/jenny|aria|ana|sonia|libby|emma|ava|guy|andrew|hamed|zariyah|salma|shakir|fatima|amany/i.test(v.name)?4:0)+(v.localService?0:2)}
 function pickVoices(){for(const L of['en','ar']){const c=voicesFor(L);VO[L]=c.find(v=>v.name===S['v_'+L])||c.sort((a,b)=>vScore(b)-vScore(a))[0]||null}}
 const isNat=v=>!!v&&/natural|neural|online|google/i.test(v.name);
-function voiceNote(){if(Object.keys(AUD).length>100)return `<div class="vnote ok">🎙️ Recorded natural voices are on (English and Arabic). ✅</div>`;if(!window.speechSynthesis)return '';const en=isNat(VO.en),ar=isNat(VO.ar);if(en&&ar)return `<div class="vnote ok">🗣️ Human-like voices are on. ✅</div>`;return `<div class="vnote">🗣️ <b>The voice may sound like a robot on this browser.</b> For a human-like voice in English and Arabic, open this game's link in <b>Microsoft Edge</b>, then in ⚙️ Settings choose voices with <b>"Natural"</b> in the name.${AR('لِصَوْتٍ طَبِيعِيٍّ، افْتَحِ الرَّابِطَ فِي مُتَصَفِّحِ مَايْكْرُوسُوفْت إِيدْج.')}</div>`}
+function voiceNote(){if(VLOAD.done&&Object.keys(AUD).length>100)return `<div class="vnote ok">🎙️ Recorded natural voices are on (English and Arabic). ✅</div>`;if(!window.speechSynthesis)return '';const en=isNat(VO.en),ar=isNat(VO.ar);if(en&&ar)return `<div class="vnote ok">🗣️ Human-like voices are on. ✅</div>`;return `<div class="vnote">🗣️ <b>The voice may sound like a robot on this browser.</b> For a human-like voice in English and Arabic, open this game's link in <b>Microsoft Edge</b>, then in ⚙️ Settings choose voices with <b>"Natural"</b> in the name.${AR('لِصَوْتٍ طَبِيعِيٍّ، افْتَحِ الرَّابِطَ فِي مُتَصَفِّحِ مَايْكْرُوسُوفْت إِيدْج.')}</div>`}
 if(window.speechSynthesis){pickVoices();speechSynthesis.onvoiceschanged=()=>{pickVoices();if(route&&route[0]==='welcome')render()}}
 function clean(t,lang){t=String(t).replace(/<br\s*\/?>/gi,'. ').replace(/<[^>]+>/g,'').replace(/&[a-z#0-9]+;/gi,' ');t=t.replace(/\s*[→←]\s*/g,lang==='ar'?'، ثُمَّ ':', then ');t=t.replace(/_{2,}/g,lang==='ar'?' ... ':' blank ');t=t.replace(/[\p{Extended_Pictographic}←-⇿☀-➿️‍⭐⬜]/gu,'');t=t.replace(/["“”]/g,'').replace(/\s+/g,' ').trim();return t}
 function utter(t,o={}){const lang=o.lang||'en',u=new SpeechSynthesisUtterance(clean(t,lang));u.lang=lang==='ar'?(VO.ar?VO.ar.lang:'ar-SA'):(VO.en?VO.en.lang:'en-US');if(VO[lang])u.voice=VO[lang];u.rate=o.rate||(lang==='ar'?S.rateAr:S.rateEn);u.pitch=1;u.volume=o.vol==null?1:o.vol;return u}
 const AUD={};let curA=null;
-const loadVoices=async()=>{const emb=document.querySelectorAll('script[type="application/x-voice"]');if(emb.length){for(const el of emb){await new Promise(r=>setTimeout(r,0));try{Object.assign(AUD,JSON.parse(el.textContent))}catch(e){}}return}const base=window.SQ_VOICE||'audio/';try{const idx=await(await fetch(base+'v_index.json')).json();idx.sort((a,b)=>a.includes('_en')?-1:1);for(const f of idx){try{const r=await fetch(base+f);if(r.ok)Object.assign(AUD,await r.json())}catch(e){}}}catch(e){}};
+let VLOAD={n:0,of:0,done:false},VREADY_res;const VREADY=new Promise(r=>VREADY_res=r);
+const vProg=()=>{const el=document.getElementById('vload');if(!el)return;if(VLOAD.done){el.remove();return}el.innerHTML=`🎙️ Loading voices… ${VLOAD.of?Math.round(VLOAD.n/VLOAD.of*100):0}% <span dir="rtl" style="font-size:16px">جَارٍ تَحْمِيلُ الْأَصْوَاتِ…</span>`};
+const vDone=()=>{VLOAD.done=true;vProg();VREADY_res()};
+const loadVoices=async()=>{const emb=document.querySelectorAll('script[type="application/x-voice"]');if(emb.length){for(const el of emb){await new Promise(r=>setTimeout(r,0));try{Object.assign(AUD,JSON.parse(el.textContent))}catch(e){}}vDone();return}
+ const base=window.SQ_VOICE||'audio/';try{const idx=await(await fetch(base+'v_index.json',{cache:'no-cache'})).json();VLOAD.of=idx.length;
+  if(!document.getElementById('vload')){const d=document.createElement('div');d.id='vload';document.body.appendChild(d)}vProg();
+  let cache=null;try{cache=await caches.open('sq-voices')}catch(e){}
+  const urls=idx.map(f=>new URL(base+f,location.href).href);
+  await Promise.all(urls.map(async url=>{try{let r=cache&&await cache.match(url);if(!r){r=await fetch(url);if(r.ok&&cache){try{await cache.put(url,r.clone())}catch(e){}}}if(r&&r.ok)Object.assign(AUD,await r.json())}catch(e){}VLOAD.n++;vProg()}));
+  if(cache){try{const root=new URL(base,location.href).href;for(const k of await cache.keys()){if(k.url.startsWith(root)&&!urls.includes(k.url))cache.delete(k)}}catch(e){}}}catch(e){}vDone()};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',loadVoices);else loadVoices();
 const VSTAT={rec:0,live:0,miss:[]};
 function stripName(t,n){t=String(t);if(!n)return t;const e=n.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');const re=/^[\x00-\x7f]+$/.test(n)?new RegExp('(,\\s*)?\\b'+e+'\\b(\\s*,)?','gi'):new RegExp('(,\\s*)?'+e+'(\\s*,)?','g');return t.replace(re,(m,a,b)=>a&&b?',':'').replace(/\s+([!?.,])/g,'$1').replace(/^\s*,\s*/,'').replace(/\s{2,}/g,' ').trim()}
 function recFor(t,lang){let r=AUD[lang+'|'+clean(t,lang)];if(!r&&P())r=AUD[lang+'|'+clean(stripName(t,PN()),lang)];return r}
 function stopA(){if(curA){try{curA.pause()}catch(e){}curA=null}}
 const UQ=[];let spTok=0,warmed=false;
-function speakP(t,o={}){return new Promise(res=>{if(!S.voice||(onBreak&&!o.brk)||!String(t).trim()){res();return}
- const lang=o.lang||'en',rec=o.live?null:recFor(t,lang);if(rec)VSTAT.rec++;else if(!o.live){VSTAT.live++;VSTAT.miss.push(clean(t,lang).slice(0,60));if(VSTAT.miss.length>8)VSTAT.miss.shift()}
- if(rec){const my=++spTok;stopA();try{if(window.speechSynthesis&&(speechSynthesis.speaking||speechSynthesis.pending))speechSynthesis.cancel()}catch(e){}const a=new Audio('data:audio/ogg;base64,'+rec);a.volume=o.vol==null?1:Math.max(.1,Math.min(1,o.vol));curA=a;let done=false;const fin=()=>{if(done)return;done=true;if(curA===a)curA=null;res()};a.onended=fin;a.onerror=fin;a.onpause=()=>{if(a.currentTime<a.duration-.05)fin()};const p=a.play();if(p&&p.catch)p.catch(fin);setTimeout(fin,30000);return}
+/* talking lock: while a narration plays inside an activity, moving forward is paused */
+let VB=0;const lockOn=()=>{VB++;document.body.classList.add('talking')},lockOff=()=>{VB=Math.max(0,VB-1);if(!VB)document.body.classList.remove('talking')};
+function speakP(t,o={}){const tok=actTok;return new Promise(res0=>{let settled=false,locked=false;const res=()=>{if(settled)return;settled=true;if(locked)lockOff();if(tok===actTok)res0()};
+ if(!S.voice||(onBreak&&!o.brk)||!String(t).trim()){res();return}
+ const lang=o.lang||'en';let rec=o.live?null:recFor(t,lang);
+ if(!rec&&!o.live&&!VLOAD.done){Promise.race([VREADY,new Promise(r=>setTimeout(r,6000))]).then(()=>{if(tok!==actTok){res();return}speakP(t,o).then(res)});return}
+ if(rec)VSTAT.rec++;else if(!o.live){VSTAT.live++;VSTAT.miss.push(clean(t,lang).slice(0,60));if(VSTAT.miss.length>8)VSTAT.miss.shift()}
+ const lk=inActivity&&!o.nolock&&!o.brk;if(lk){locked=true;lockOn()}
+ keepAlive();
+ if(rec){const my=++spTok;stopA();try{if(window.speechSynthesis&&(speechSynthesis.speaking||speechSynthesis.pending))speechSynthesis.cancel()}catch(e){}const a=new Audio('data:audio/ogg;base64,'+rec);a.volume=o.vol==null?1:Math.max(.1,Math.min(1,o.vol));curA=a;let safety=setTimeout(()=>fin(),20000);const fin=()=>{clearTimeout(safety);if(curA===a)curA=null;res()};a.onloadedmetadata=()=>{if(isFinite(a.duration)){clearTimeout(safety);safety=setTimeout(fin,a.duration*1000+2500)}};a.onended=fin;a.onerror=fin;a.onpause=()=>{if(!a.ended)fin()};const p=a.play();if(p&&p.catch)p.catch(fin);return}
  if(!window.speechSynthesis){res();return}stopA();
  const my=++spTok;
- const go=()=>{if(my!==spTok){res();return}let u;try{u=utter(t,o)}catch(e){res();return}UQ.push(u);if(UQ.length>30)UQ.shift();let done=false;const est=2500+clean(t,lang).length*(lang==='ar'?110:85)/(u.rate||1);const to=setTimeout(()=>fin(),est+3000);const fin=()=>{if(done)return;done=true;clearTimeout(to);res()};u.onend=fin;u.onerror=fin;try{speechSynthesis.resume();speechSynthesis.speak(u)}catch(e){fin()}};
+ const go=()=>{if(my!==spTok){res();return}let u;try{u=utter(t,o)}catch(e){res();return}UQ.push(u);if(UQ.length>30)UQ.shift();const est=2500+clean(t,lang).length*(lang==='ar'?110:85)/(u.rate||1);const to=setTimeout(()=>fin(),est+3000);const fin=()=>{clearTimeout(to);res()};u.onend=fin;u.onerror=fin;try{speechSynthesis.resume();speechSynthesis.speak(u)}catch(e){fin()}};
  try{if(speechSynthesis.speaking||speechSynthesis.pending){speechSynthesis.cancel();setTimeout(go,150)}else go()}catch(e){res()}})}
+/* keep the sound card awake so the first words of each clip are not lost or delayed (Bluetooth / power saving) */
+let KA=null;function keepAlive(){try{if(!KA){const C=window.AudioContext||window.webkitAudioContext;if(!C)return;KA=new C();const o=KA.createOscillator(),g=KA.createGain();g.gain.value=0.0006;o.frequency.value=40;o.connect(g).connect(KA.destination);o.start()}if(KA.state==='suspended')KA.resume()}catch(e){}}
+document.addEventListener('pointerdown',keepAlive,{capture:true,passive:true});
+/* while talking, block new taps/drags inside the activity (sound buttons, Exit and Back stay free) */
+const FREE='.w,.snd,[data-free],#vload';let lastNudge=0;
+const blockTalk=e=>{if(!VB||!document.body.classList.contains('talking'))return;const t=e.target;if(!t.closest||!t.closest('#act')||t.closest(FREE))return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(e.type==='pointerdown'&&performance.now()-lastNudge>700){lastNudge=performance.now();let b=$('listen');if(!b){b=document.createElement('div');b.id='listen';document.body.appendChild(b)}b.innerHTML='👂 Listen first… <span dir="rtl" style="font-size:19px;margin-inline-start:8px">اسْتَمِعْ أَوَّلًا…</span>';b.classList.remove('show');void b.offsetWidth;b.classList.add('show')}};
+['pointerdown','mousedown','touchstart','click','dblclick'].forEach(ev=>document.addEventListener(ev,blockTalk,{capture:true,passive:false}));
 function speak(t,o={}){speakP(t,o);return null}
+/* mission narration: one clip when recorded, else 'Mission N.' + the text as two clips */
+function sayMission(i,t){const tx=clean(t,'en'),full=`Mission ${i+1}. ${tx}`;if(recFor(full,'en')||!VLOAD.done)return speakP(full);return speakP(`Mission ${i+1}.`).then(()=>speakP(tx))}
 function hush(){spTok++;stopA();try{speechSynthesis.cancel()}catch(e){}}
 function warmVoice(){if(warmed||!window.speechSynthesis)return;warmed=true;try{const u=new SpeechSynthesisUtterance(' .');u.volume=0;if(VO.en)u.voice=VO.en;UQ.push(u);speechSynthesis.speak(u);if(VO.ar){const v=new SpeechSynthesisUtterance(' .');v.volume=0;v.voice=VO.ar;v.lang=VO.ar.lang;UQ.push(v);speechSynthesis.speak(v)}}catch(e){}}
 document.addEventListener('pointerdown',warmVoice,{capture:true,once:true});
@@ -258,7 +283,7 @@ function runQuiz(id,qs,opt){let i=0,score=0,retry=[],firstPass=true,lives=opt.li
    $('fb').innerHTML=`<div class="say" style="margin-top:12px">${ok?me('cheer'):buzzy()}<div class="bubble pop">${ok?'✅ ':'💡 '}${q.why}${AR(WA[q.why]||'')}</div></div><div class="center"><button class="btn g big" id="nq">Next ➜</button></div>`;
    $('nq').onclick=()=>{SFX.click();i++;if(opt.boss&&lives<=0)return opt.lose(score);draw()}};
   document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.k,b));
-  if(opt.timer){let t=0;tmr=every(()=>{t+=.1;const w=Math.max(0,100-t/opt.timer*100);if($('tb'))$('tb').style.width=w+'%';if(w<=0)answer(-1,null)},100)}};draw()}
+  if(opt.timer){let t=0;tmr=every(()=>{if(VB)return;t+=.1;const w=Math.max(0,100-t/opt.timer*100);if($('tb'))$('tb').style.width=w+'%';if(w<=0)answer(-1,null)},100)}};draw()}
 function quiz(id){const n=calm()?5:7;const qs=shuffle(QB[id]).slice(0,n);runQuiz(id,qs,{done:s=>finish(id,ratio(s/qs.length),`You got ${s} of ${qs.length} right the first time!`,`أَجَبْتَ ${s} مِنْ ${qs.length} إِجَابَاتٍ صَحِيحَةٍ مِنَ الْمُحَاوَلَةِ الْأُولَى!`)})}
 
 /* ---------- boss ---------- */

@@ -31,13 +31,13 @@ const podG=(x,y,s=1,open=false,n=4,r=20)=>`<g transform="translate(${x},${y}) ro
 function rootsG(x,y,depth,spread,col='#f5f0e1'){let out='';const br=(x0,y0,a,l,w,d)=>{if(d>4||l<8)return;const x1=x0+Math.sin(a)*l,y1=y0+Math.cos(a)*l;out+=`<path d="M${x0} ${y0} Q${(x0+x1)/2+Math.sin(a*3)*6} ${(y0+y1)/2} ${x1} ${y1}" stroke="${col}" stroke-width="${w}" fill="none" stroke-linecap="round"/>`;br(x1,y1,a+.45*spread,l*.66,w*.66,d+1);br(x1,y1,a-.45*spread,l*.66,w*.66,d+1);if(d<2)br(x1,y1,a+.05,l*.8,w*.75,d+1)};br(x,y,0,depth*.45,6,0);return out}
 /* a sunflower that grows with g = 0..1 (0 seed, .15 sprout, .25 seed leaves, .38+ true leaves, .62 bud, .72 bloom, .84 wither, .93 fruit) */
 const sfH=g=>g<.12?0:g<.2?28*(g-.12)/.08:g<.3?28+12*(g-.2)/.1:Math.min(300,40+260*Math.pow(Math.min(1,(g-.3)/.35),1.1));
-function sunflowerG(x,gy,g,o={}){const H=sfH(g);let s='';
+function sunflowerG(x,gy,g,o={}){const H=sfH(g);let s='';const dry=o.dry!=null?o.dry:Math.max(0,Math.min(1,(g-.8)/.15));const DS=dry>0?`style="filter:sepia(${dry.toFixed(2)}) saturate(${(1+dry*.5).toFixed(2)}) hue-rotate(${(-18*dry).toFixed(0)}deg) brightness(${(1-dry*.18).toFixed(2)})"`:'';
  if(o.roots!==false&&g>=.12)s+=rootsG(x,gy+4,Math.min(150,30+H*.5),1,o.rootCol);
- if(g<.12)return s+seedSun(x,gy+26,1,30);
+ if(g<.12){const rk=Math.max(0,(g-.05)/.07);return s+(rk>0?`<path d="M${x+4} ${gy+40} q${-6*rk} ${22*rk} ${2} ${46*rk}" stroke="#f5f0e1" stroke-width="4" fill="none" stroke-linecap="round"/>${rk>.5?`<path d="M${x+2} ${gy+60} l-10 8 M${x+3} ${gy+70} l9 7" stroke="#f5f0e1" stroke-width="2" opacity="${(rk-.5)*2}"/>`:''}`:'')+seedSun(x,gy+26,1,30)+(rk>.6?`<path d="M${x} ${gy+12} q4 ${-10*(rk-.6)/.4} 0 ${-16*(rk-.6)/.4}" stroke="url(#gStem)" stroke-width="5" fill="none" stroke-linecap="round"/>`:'')}
  if(g<.2){const k=(g-.12)/.08;return s+`<path d="M${x} ${gy+20} Q${x+14} ${gy-H*.6} ${x+4} ${gy-H}" stroke="url(#gStem)" stroke-width="6" fill="none" stroke-linecap="round"/>${seedSun(x+6,gy-H-6,.7,70)}`}
  const top=gy-H;s+=`<path d="M${x} ${gy} Q${x-4} ${gy-H*.5} ${x} ${top}" stroke="url(#gStem)" stroke-width="${Math.min(16,5+H*.04)}" fill="none" stroke-linecap="round"/>`;
  const sl=g<.5;if(sl||o.keepSeed)s+=`<g class="seedleaf">${leafSeed(x,gy-Math.min(H,40)*.75,26,-160)}${leafSeed(x,gy-Math.min(H,40)*.75,26,-20)}</g>`;
- const nl=g<.36?0:Math.min(7,2+Math.floor((g-.36)/.04));for(let i=0;i<nl;i++){const yy=gy-H*(.2+i*(.62/7)),len=Math.min(78,34+(nl-i)*6+(g-.36)*40),side=i%2;s+=`<g class="trueleaf">${leafTrue(x+(side?-3:3),yy,len,side?-168:-12)}</g>`}
+ const nl=g<.36?0:Math.min(7,2+Math.floor((g-.36)/.04));for(let i=0;i<nl;i++){const yy=gy-H*(.2+i*(.62/7)),len=Math.min(78,34+(nl-i)*6+(g-.36)*40),side=i%2;s+=`<g class="trueleaf" ${DS}>${leafTrue(x+(side?-3:3),yy,len,(side?-168:-12)+(side?-1:1)*dry*40)}</g>`}
  if(g>=.6)s+=sunHead(x,top,g<.68?22:46,g<.68?'bud':g<.82?'bloom':g<.9?'wither':'fruit');
  return s}
 const sfTop=(gy,g)=>{const H=sfH(g);return gy-H-(g>=.6?(g<.68?22:40):0)};
