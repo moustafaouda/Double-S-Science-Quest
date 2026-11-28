@@ -1,5 +1,5 @@
 /* Science Quest offline helper: keeps the whole site and all recorded voices on the laptop. */
-const VER='b6def0969c';
+const VER='2901c07ee4';
 const APP='sq-app-'+VER;
 const SHELL=["index.html", "./", "hub.js", "icon-192.png", "icon-512.png", "insects/art.js", "insects/data.js", "insects/gfx.js", "insects/ilib.js", "insects/index.html", "insects/labs.js", "light/acts.js", "light/art.js", "light/data.js", "light/index.html", "light/labs2.js", "manifest.webmanifest", "plants/art.js", "plants/data.js", "plants/gfx.js", "plants/index.html", "plants/labs.js", "shared/core.css", "shared/core.js", "shared/time.js", "sound/index.html", "sound/world.js", "insects/", "light/", "plants/", "sound/"];
 const WORLDS=['hub','sound','light','plants','insects'];
